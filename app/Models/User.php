@@ -22,7 +22,9 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
+    public function recipes(){
+        return $this->hasMany(Recipe::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
