@@ -65,4 +65,14 @@ class RecipeController extends Controller
     {
         //
     }
+
+    public function descriptions(Recipe $recipe)
+    {
+        $descriptions=$recipe->recipeDescriptions;
+        return view('recipeDescriptions.index', compact('descriptions','recipe'));
+    }
+    public function ingredients(Recipe $recipe){
+        $ingredients=$recipe->ingredients;
+        return view('ingredients.index', compact('ingredients','recipe'));
+    }
 }
