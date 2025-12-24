@@ -13,7 +13,9 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $recipes = $user->recipes;
+        return view('myRecipe.index', compact('recipes'));
     }
 
     /**

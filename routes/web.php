@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
@@ -11,5 +12,9 @@ Route::middleware('guest')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::get('/',[UserController::class,'index'])->name('home');
+    Route::resource('/recipes', RecipeController::class);
+    Route::get('/recipe/{recipe}/descriptions',[RecipeController::class,'descriptions'])->name('recipe.descriptions');
+    Route::get('/recipe/{recipe}/ingredients',[RecipeController::class,'ingredients'])->name('recipe.ingredients');
+
     Route::post('/logout', [AuthController::class,'logout'])->name('logout');
 });
