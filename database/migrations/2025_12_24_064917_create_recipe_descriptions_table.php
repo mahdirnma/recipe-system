@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('recipe_descriptions', function (Blueprint $table) {
             $table->id();
+            $table->longText('description');
+            $table->foreignId('recipe_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
