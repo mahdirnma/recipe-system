@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Foodstuff;
 use App\Models\Recipe;
 use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
+use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
@@ -23,7 +26,8 @@ class RecipeController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::where('is_active', 1)->get();
+        return view('myRecipe.addRecipe.create', compact('categories'));
     }
 
     /**
@@ -31,9 +35,36 @@ class RecipeController extends Controller
      */
     public function store(StoreRecipeRequest $request)
     {
-        //
+        $user = auth()->user();
+        $recipe = $user->recipes()->create($request->validated());
+        if ($request->type=='A'){
+            return view('myRecipe.addRecipe.typeADescription', compact('recipe'));
+        }/*elseif ($request=$request->type=='B'){
+            return redirect()->route('recipe.b.description.store',compact('recipe'));
+        }*/
     }
 
+    public function ADescriptions(Recipe $recipe,Request $request)
+    {
+        $description=$recipe->recipeDescriptions()->create([
+            'description'=>$request->description
+        ]);
+        $foodstuffs=Foodstuff::all();
+        if ($description){
+            return view('myRecipe.addRecipe.addIngredients', compact('recipe','foodstuffs'));
+        }
+    }
+    public function storeIngredients(Recipe $recipe,Request $request){
+        $ingredient=$recipe->ingredients()->create([
+            'foodstuff_id'=>$request->foodstuff,
+            'quantity'=>$request->quantity
+        ]);
+        $foodstuffs=Foodstuff::all();
+        if ($ingredient){
+            return view('myRecipe.addRecipe.addIngredients', compact('recipe','foodstuffs'))->with('success', 'Ingredient created');
+        }
+        return view('myRecipe.addRecipe.addIngredients', compact('recipe','foodstuffs'))->with('unsuccess', 'Ingredient didnt create');
+    }
     /**
      * Display the specified resource.
      */
